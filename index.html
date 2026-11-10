@@ -1,0 +1,829 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Value Sim-to-Real: Simulation Values for Efficient Real-World RL</title>
+
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css?family=Google+Sans|Noto+Sans|Castoro" rel="stylesheet">
+
+  <!-- Bulma & Icons -->
+  <link rel="stylesheet" href="./static/css/bulma.min.css">
+  <link rel="stylesheet" href="./static/css/fontawesome.all.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/jpswalsh/academicons@1/css/academicons.min.css">
+
+  <!-- Custom CSS -->
+  <link rel="stylesheet" href="./static/css/index.css">
+
+  <!-- LaTeX math rendering -->
+  <script defer id="MathJax-script" src="https://cdn.jsdelivr.net/npm/mathjax@3.2.2/es5/tex-chtml.js"></script>
+
+  <!-- jQuery & JS -->
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script defer src="./static/js/fontawesome.all.min.js"></script>
+  <script src="./static/js/index.js"></script>
+</head>
+<body>
+
+<!-- Title & Authors Section -->
+<section class="hero">
+  <div class="hero-body">
+    <div class="container is-max-desktop">
+      <div class="columns is-centered">
+        <div class="column has-text-centered">
+          <!-- Title -->
+          <h1 class="title is-2 publication-title">
+            Value Sim-to-Real: Simulation Values<br>
+            for Efficient Real-World RL
+          </h1>
+
+          <!-- Authors -->
+          <div class="is-size-5 publication-authors">
+            <span class="author-block">
+              <a href="https://dwjshift.github.io/" target="_blank">Weijun Dong</a><sup>1,*</sup>,
+            </span>
+            <span class="author-block">
+              <a href="https://modric197.github.io/" target="_blank">Yilin Wang</a><sup>1,*</sup>,
+            </span>
+            <span class="author-block">
+              <a href="https://jayefu.github.io/" target="_blank">Jiawei Fu</a><sup>1</sup>,
+            </span>
+            <span class="author-block">
+              <a href="https://www.yuchenzh.com/" target="_blank">Yuchen Zhou</a><sup>2</sup>,
+            </span><br>
+            <span class="author-block">
+              <a href="https://hichristensen.com/" target="_blank">Henrik I. Christensen</a><sup>1</sup>,
+            </span>
+            <span class="author-block">
+              <a href="https://zhaohengyin.github.io/" target="_blank">Zhao-Heng Yin</a><sup>3,†</sup>,
+            </span>
+            <span class="author-block">
+              <span>Hao Su</span><sup>4,†</sup>
+            </span>
+          </div>
+
+          <!-- Affiliations -->
+          <div class="is-size-5 publication-authors">
+            <span class="author-block"><sup>1</sup>University of California, San Diego</span>&nbsp;&nbsp;&nbsp;&nbsp;
+            <span class="author-block"><sup>2</sup>University of Pennsylvania</span><br>
+            <span class="author-block"><sup>3</sup>University of California, Berkeley</span>&nbsp;&nbsp;&nbsp;&nbsp;
+            <span class="author-block"><sup>4</sup>Sudo AI GmbH</span>
+          </div>
+
+          <!-- Contribution / Advising Notes -->
+          <div class="publication-notes mt-2">
+            <span class="author-block"><sup>*</sup>Equal Contribution</span>
+            <span class="author-block" style="margin-left: 1.5rem;"><sup>†</sup>Equal Advising</span>
+          </div>
+
+          <!-- Publication Links (PDF Button) -->
+          <div class="column has-text-centered">
+            <div class="publication-links">
+              <span class="link-block">
+                <a href="./VSR.pdf" target="_blank"
+                   class="external-link button is-normal is-rounded is-dark">
+                  <span class="icon">
+                    <i class="fas fa-file-pdf"></i>
+                  </span>
+                  <span>PDF</span>
+                </a>
+              </span>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Abstract Section -->
+<section class="hero is-light">
+  <div class="hero-body">
+    <div class="container is-max-desktop">
+      <div class="columns is-centered has-text-centered">
+        <div class="column">
+          <h2 class="title is-3">Abstract</h2>
+          <div class="content has-text-justified">
+            <p>
+              Real-world reinforcement learning (RL) is a promising approach for advancing robotic manipulation, but how to obtain informative and robust reward signals remains a central challenge. Recent works have explored reward models trained on real robotic data to enable efficient real-world RL. However, this formulation can be expensive and infeasible due to the high-dimensional state space and its dependence on real-world expert data. In this paper, we address this limitation with <strong>Value Sim-to-Real (VSR)</strong>, a novel framework that leverages simulation-trained value functions to define informative, high-quality reward functions for efficient real-world RL. We evaluate our method with both sim-to-sim and sim-to-real experiments on several vision-based contact-rich tasks. We show that VSR learns a smooth value function that strongly correlates with task progress and improves the performance and sample efficiency of downstream RL with its induced reward function.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Method Overview Section -->
+<section class="section">
+  <div class="container is-max-desktop">
+    <div class="columns is-centered has-text-left">
+      <div class="column">
+        <h2 class="title is-3">Method Overview</h2>
+      </div>
+    </div>
+
+    <div class="columns is-centered has-text-justified">
+      <div class="column is-12">
+        <p>
+          VSR alternates state expansion and policy optimization in simulation to build a diverse buffer \(\mathcal{B}\) of task-relevant states and train a policy \(\pi_{\mathrm{sim}}\) that efficiently completes the task from these states.<br>
+          We generate a dataset by rolling out \(\pi_{\mathrm{sim}}\) from states in \(\mathcal{B}\), labeling each state with the negative number of steps to success as an approximation to its optimal value \(V^*(s)\).<br>
+          These value estimates are then distilled into a visual state-value function on segmented point clouds for sim-to-real transfer.
+        </p>
+      </div>
+    </div>
+
+    <!-- Figure 2: knnppo-demo -->
+    <div class="columns is-centered has-text-centered mt-4">
+      <div class="column is-12">
+        <figure class="image">
+          <img src="./static/images/knnppo-demo.png" alt="Method Overview Diagram" class="method-image" style="border-radius: 8px;">
+        </figure>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Downstream RL Results Section -->
+<section class="section" id="results">
+  <div class="container is-max-desktop">
+    <div class="columns is-multiline">
+      <div class="column is-12">
+        <h2 class="title is-3">Downstream RL Results</h2>
+        <div class="content has-text-justified">
+          <p>
+            We validate the effectiveness of our value function by using it for reward shaping in downstream real-world and sim-to-sim reinforcement learning.
+          </p>
+        </div>
+      </div>
+
+      <div class="column is-12">
+        <h3 class="title is-4">Real-World RL</h3>
+        <figure class="image">
+          <a href="./figures/real-world%20results.png" target="_blank" rel="noopener noreferrer" aria-label="View real-world RL results at full size">
+            <img src="./figures/real-world%20results.png" alt="Real-world RL results comparing success rates and completion times on Push Cube, Flip Hamburger, and Pack Cubes." width="1780" height="572" loading="lazy">
+          </a>
+        </figure>
+      </div>
+
+      <div class="column is-12 mt-4">
+        <h3 class="title is-4">Sim-to-Sim RL</h3>
+        <figure class="image">
+          <a href="./figures/sim2sim_results50k.pdf" target="_blank" rel="noopener noreferrer" aria-label="View sim-to-sim RL results as a PDF">
+            <img src="./static/images/sim2sim_results50k.svg" alt="Sim-to-sim RL learning curves comparing success rates over 50,000 environment steps on Push Cube, Flip Hamburger, and Pack Cubes." width="1296" height="360" loading="lazy">
+          </a>
+        </figure>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Value Function Visualization Section -->
+<section class="section" style="padding-top: 1rem;">
+  <div class="container is-max-desktop">
+    <div class="columns is-multiline">
+      <div class="column is-12">
+        <h2 class="title is-3">Value Function Visualization</h2>
+      </div>
+    </div>
+
+    <!-- Task Tabs (Push Cube, Flip Hamburger, Pack Cubes) -->
+    <div class="tabs is-toggle is-fullwidth" id="policyTaskTabs">
+      <ul>
+        <li class="tablinks is-active" id="tab-push" onclick="switchTaskTab(event, 'push')">
+          <a><span><b>Push Cube</b></span></a>
+        </li>
+        <li class="tablinks" id="tab-hamburger" onclick="switchTaskTab(event, 'hamburger')">
+          <a><span><b>Flip Hamburger</b></span></a>
+        </li>
+        <li class="tablinks" id="tab-pack" onclick="switchTaskTab(event, 'pack')">
+          <a><span><b>Pack Cubes</b></span></a>
+        </li>
+      </ul>
+    </div>
+
+    <!-- Video Display Area -->
+    <div class="video-card">
+      <!-- Task Pane: Push Cube -->
+      <div id="pane-push" class="task-pane is-active">
+        <!-- 10 Demo Sub-tabs -->
+        <div class="tabs is-toggle is-small is-fullwidth demo-sub-tabs" id="subtabs-push">
+          <ul>
+            <li class="demo-tab is-active" id="subtab-push-1" onclick="switchDemoTab(event, 'push', 1)">
+              <a><b>Demo 1</b></a>
+            </li>
+            <li class="demo-tab" id="subtab-push-2" onclick="switchDemoTab(event, 'push', 2)">
+              <a><b>Demo 2</b></a>
+            </li>
+            <li class="demo-tab" id="subtab-push-3" onclick="switchDemoTab(event, 'push', 3)">
+              <a><b>Demo 3</b></a>
+            </li>
+            <li class="demo-tab" id="subtab-push-4" onclick="switchDemoTab(event, 'push', 4)">
+              <a><b>Demo 4</b></a>
+            </li>
+            <li class="demo-tab" id="subtab-push-5" onclick="switchDemoTab(event, 'push', 5)">
+              <a><b>Demo 5</b></a>
+            </li>
+            <li class="demo-tab" id="subtab-push-6" onclick="switchDemoTab(event, 'push', 6)">
+              <a><b>Demo 6</b></a>
+            </li>
+            <li class="demo-tab" id="subtab-push-7" onclick="switchDemoTab(event, 'push', 7)">
+              <a><b>Demo 7</b></a>
+            </li>
+            <li class="demo-tab" id="subtab-push-8" onclick="switchDemoTab(event, 'push', 8)">
+              <a><b>Demo 8</b></a>
+            </li>
+            <li class="demo-tab" id="subtab-push-9" onclick="switchDemoTab(event, 'push', 9)">
+              <a><b>Demo 9</b></a>
+            </li>
+            <li class="demo-tab" id="subtab-push-10" onclick="switchDemoTab(event, 'push', 10)">
+              <a><b>Demo 10</b></a>
+            </li>
+          </ul>
+        </div>
+
+        <!-- 10 Demo Video Panes -->
+        <div id="video-pane-push-1" class="demo-pane is-active">
+          <div class="video-container">
+            <video class="video-player" controls autoplay loop muted playsinline style="display: none;">
+              <source src="./static/videos/push_cube_demo_1.mp4" type="video/mp4">
+              Your browser does not support the video tag.
+            </video>
+            <div class="placeholder-overlay">
+              <div class="placeholder-icon">
+                <i class="fas fa-play-circle"></i>
+              </div>
+              <div class="placeholder-title">Push Cube &mdash; Demo 1</div>
+              <div class="placeholder-text">Video placeholder. Place your video file at <code>static/videos/push_cube_demo_1.mp4</code></div>
+              <span class="placeholder-tag"><i class="fas fa-video mr-1"></i> Push Cube &bull; Demo 1 / 10</span>
+            </div>
+          </div>
+        </div>
+        <div id="video-pane-push-2" class="demo-pane">
+          <div class="video-container">
+            <video class="video-player" controls autoplay loop muted playsinline style="display: none;">
+              <source src="./static/videos/push_cube_demo_2.mp4" type="video/mp4">
+              Your browser does not support the video tag.
+            </video>
+            <div class="placeholder-overlay">
+              <div class="placeholder-icon">
+                <i class="fas fa-play-circle"></i>
+              </div>
+              <div class="placeholder-title">Push Cube &mdash; Demo 2</div>
+              <div class="placeholder-text">Video placeholder. Place your video file at <code>static/videos/push_cube_demo_2.mp4</code></div>
+              <span class="placeholder-tag"><i class="fas fa-video mr-1"></i> Push Cube &bull; Demo 2 / 10</span>
+            </div>
+          </div>
+        </div>
+        <div id="video-pane-push-3" class="demo-pane">
+          <div class="video-container">
+            <video class="video-player" controls autoplay loop muted playsinline style="display: none;">
+              <source src="./static/videos/push_cube_demo_3.mp4" type="video/mp4">
+              Your browser does not support the video tag.
+            </video>
+            <div class="placeholder-overlay">
+              <div class="placeholder-icon">
+                <i class="fas fa-play-circle"></i>
+              </div>
+              <div class="placeholder-title">Push Cube &mdash; Demo 3</div>
+              <div class="placeholder-text">Video placeholder. Place your video file at <code>static/videos/push_cube_demo_3.mp4</code></div>
+              <span class="placeholder-tag"><i class="fas fa-video mr-1"></i> Push Cube &bull; Demo 3 / 10</span>
+            </div>
+          </div>
+        </div>
+        <div id="video-pane-push-4" class="demo-pane">
+          <div class="video-container">
+            <video class="video-player" controls autoplay loop muted playsinline style="display: none;">
+              <source src="./static/videos/push_cube_demo_4.mp4" type="video/mp4">
+              Your browser does not support the video tag.
+            </video>
+            <div class="placeholder-overlay">
+              <div class="placeholder-icon">
+                <i class="fas fa-play-circle"></i>
+              </div>
+              <div class="placeholder-title">Push Cube &mdash; Demo 4</div>
+              <div class="placeholder-text">Video placeholder. Place your video file at <code>static/videos/push_cube_demo_4.mp4</code></div>
+              <span class="placeholder-tag"><i class="fas fa-video mr-1"></i> Push Cube &bull; Demo 4 / 10</span>
+            </div>
+          </div>
+        </div>
+        <div id="video-pane-push-5" class="demo-pane">
+          <div class="video-container">
+            <video class="video-player" controls autoplay loop muted playsinline style="display: none;">
+              <source src="./static/videos/push_cube_demo_5.mp4" type="video/mp4">
+              Your browser does not support the video tag.
+            </video>
+            <div class="placeholder-overlay">
+              <div class="placeholder-icon">
+                <i class="fas fa-play-circle"></i>
+              </div>
+              <div class="placeholder-title">Push Cube &mdash; Demo 5</div>
+              <div class="placeholder-text">Video placeholder. Place your video file at <code>static/videos/push_cube_demo_5.mp4</code></div>
+              <span class="placeholder-tag"><i class="fas fa-video mr-1"></i> Push Cube &bull; Demo 5 / 10</span>
+            </div>
+          </div>
+        </div>
+        <div id="video-pane-push-6" class="demo-pane">
+          <div class="video-container">
+            <video class="video-player" controls autoplay loop muted playsinline style="display: none;">
+              <source src="./static/videos/push_cube_demo_6.mp4" type="video/mp4">
+              Your browser does not support the video tag.
+            </video>
+            <div class="placeholder-overlay">
+              <div class="placeholder-icon">
+                <i class="fas fa-play-circle"></i>
+              </div>
+              <div class="placeholder-title">Push Cube &mdash; Demo 6</div>
+              <div class="placeholder-text">Video placeholder. Place your video file at <code>static/videos/push_cube_demo_6.mp4</code></div>
+              <span class="placeholder-tag"><i class="fas fa-video mr-1"></i> Push Cube &bull; Demo 6 / 10</span>
+            </div>
+          </div>
+        </div>
+        <div id="video-pane-push-7" class="demo-pane">
+          <div class="video-container">
+            <video class="video-player" controls autoplay loop muted playsinline style="display: none;">
+              <source src="./static/videos/push_cube_demo_7.mp4" type="video/mp4">
+              Your browser does not support the video tag.
+            </video>
+            <div class="placeholder-overlay">
+              <div class="placeholder-icon">
+                <i class="fas fa-play-circle"></i>
+              </div>
+              <div class="placeholder-title">Push Cube &mdash; Demo 7</div>
+              <div class="placeholder-text">Video placeholder. Place your video file at <code>static/videos/push_cube_demo_7.mp4</code></div>
+              <span class="placeholder-tag"><i class="fas fa-video mr-1"></i> Push Cube &bull; Demo 7 / 10</span>
+            </div>
+          </div>
+        </div>
+        <div id="video-pane-push-8" class="demo-pane">
+          <div class="video-container">
+            <video class="video-player" controls autoplay loop muted playsinline style="display: none;">
+              <source src="./static/videos/push_cube_demo_8.mp4" type="video/mp4">
+              Your browser does not support the video tag.
+            </video>
+            <div class="placeholder-overlay">
+              <div class="placeholder-icon">
+                <i class="fas fa-play-circle"></i>
+              </div>
+              <div class="placeholder-title">Push Cube &mdash; Demo 8</div>
+              <div class="placeholder-text">Video placeholder. Place your video file at <code>static/videos/push_cube_demo_8.mp4</code></div>
+              <span class="placeholder-tag"><i class="fas fa-video mr-1"></i> Push Cube &bull; Demo 8 / 10</span>
+            </div>
+          </div>
+        </div>
+        <div id="video-pane-push-9" class="demo-pane">
+          <div class="video-container">
+            <video class="video-player" controls autoplay loop muted playsinline style="display: none;">
+              <source src="./static/videos/push_cube_demo_9.mp4" type="video/mp4">
+              Your browser does not support the video tag.
+            </video>
+            <div class="placeholder-overlay">
+              <div class="placeholder-icon">
+                <i class="fas fa-play-circle"></i>
+              </div>
+              <div class="placeholder-title">Push Cube &mdash; Demo 9</div>
+              <div class="placeholder-text">Video placeholder. Place your video file at <code>static/videos/push_cube_demo_9.mp4</code></div>
+              <span class="placeholder-tag"><i class="fas fa-video mr-1"></i> Push Cube &bull; Demo 9 / 10</span>
+            </div>
+          </div>
+        </div>
+        <div id="video-pane-push-10" class="demo-pane">
+          <div class="video-container">
+            <video class="video-player" controls autoplay loop muted playsinline style="display: none;">
+              <source src="./static/videos/push_cube_demo_10.mp4" type="video/mp4">
+              Your browser does not support the video tag.
+            </video>
+            <div class="placeholder-overlay">
+              <div class="placeholder-icon">
+                <i class="fas fa-play-circle"></i>
+              </div>
+              <div class="placeholder-title">Push Cube &mdash; Demo 10</div>
+              <div class="placeholder-text">Video placeholder. Place your video file at <code>static/videos/push_cube_demo_10.mp4</code></div>
+              <span class="placeholder-tag"><i class="fas fa-video mr-1"></i> Push Cube &bull; Demo 10 / 10</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Task Pane: Flip Hamburger -->
+      <div id="pane-hamburger" class="task-pane">
+        <!-- 10 Demo Sub-tabs -->
+        <div class="tabs is-toggle is-small is-fullwidth demo-sub-tabs" id="subtabs-hamburger">
+          <ul>
+            <li class="demo-tab is-active" id="subtab-hamburger-1" onclick="switchDemoTab(event, 'hamburger', 1)">
+              <a><b>Demo 1</b></a>
+            </li>
+            <li class="demo-tab" id="subtab-hamburger-2" onclick="switchDemoTab(event, 'hamburger', 2)">
+              <a><b>Demo 2</b></a>
+            </li>
+            <li class="demo-tab" id="subtab-hamburger-3" onclick="switchDemoTab(event, 'hamburger', 3)">
+              <a><b>Demo 3</b></a>
+            </li>
+            <li class="demo-tab" id="subtab-hamburger-4" onclick="switchDemoTab(event, 'hamburger', 4)">
+              <a><b>Demo 4</b></a>
+            </li>
+            <li class="demo-tab" id="subtab-hamburger-5" onclick="switchDemoTab(event, 'hamburger', 5)">
+              <a><b>Demo 5</b></a>
+            </li>
+            <li class="demo-tab" id="subtab-hamburger-6" onclick="switchDemoTab(event, 'hamburger', 6)">
+              <a><b>Demo 6</b></a>
+            </li>
+            <li class="demo-tab" id="subtab-hamburger-7" onclick="switchDemoTab(event, 'hamburger', 7)">
+              <a><b>Demo 7</b></a>
+            </li>
+            <li class="demo-tab" id="subtab-hamburger-8" onclick="switchDemoTab(event, 'hamburger', 8)">
+              <a><b>Demo 8</b></a>
+            </li>
+            <li class="demo-tab" id="subtab-hamburger-9" onclick="switchDemoTab(event, 'hamburger', 9)">
+              <a><b>Demo 9</b></a>
+            </li>
+            <li class="demo-tab" id="subtab-hamburger-10" onclick="switchDemoTab(event, 'hamburger', 10)">
+              <a><b>Demo 10</b></a>
+            </li>
+          </ul>
+        </div>
+
+        <!-- 10 Demo Video Panes -->
+        <div id="video-pane-hamburger-1" class="demo-pane is-active">
+          <div class="video-container">
+            <video class="video-player" controls autoplay loop muted playsinline style="display: none;">
+              <source src="./static/videos/flip_hamburger_demo_1.mp4" type="video/mp4">
+              Your browser does not support the video tag.
+            </video>
+            <div class="placeholder-overlay">
+              <div class="placeholder-icon">
+                <i class="fas fa-play-circle"></i>
+              </div>
+              <div class="placeholder-title">Flip Hamburger &mdash; Demo 1</div>
+              <div class="placeholder-text">Video placeholder. Place your video file at <code>static/videos/flip_hamburger_demo_1.mp4</code></div>
+              <span class="placeholder-tag"><i class="fas fa-video mr-1"></i> Flip Hamburger &bull; Demo 1 / 10</span>
+            </div>
+          </div>
+        </div>
+        <div id="video-pane-hamburger-2" class="demo-pane">
+          <div class="video-container">
+            <video class="video-player" controls autoplay loop muted playsinline style="display: none;">
+              <source src="./static/videos/flip_hamburger_demo_2.mp4" type="video/mp4">
+              Your browser does not support the video tag.
+            </video>
+            <div class="placeholder-overlay">
+              <div class="placeholder-icon">
+                <i class="fas fa-play-circle"></i>
+              </div>
+              <div class="placeholder-title">Flip Hamburger &mdash; Demo 2</div>
+              <div class="placeholder-text">Video placeholder. Place your video file at <code>static/videos/flip_hamburger_demo_2.mp4</code></div>
+              <span class="placeholder-tag"><i class="fas fa-video mr-1"></i> Flip Hamburger &bull; Demo 2 / 10</span>
+            </div>
+          </div>
+        </div>
+        <div id="video-pane-hamburger-3" class="demo-pane">
+          <div class="video-container">
+            <video class="video-player" controls autoplay loop muted playsinline style="display: none;">
+              <source src="./static/videos/flip_hamburger_demo_3.mp4" type="video/mp4">
+              Your browser does not support the video tag.
+            </video>
+            <div class="placeholder-overlay">
+              <div class="placeholder-icon">
+                <i class="fas fa-play-circle"></i>
+              </div>
+              <div class="placeholder-title">Flip Hamburger &mdash; Demo 3</div>
+              <div class="placeholder-text">Video placeholder. Place your video file at <code>static/videos/flip_hamburger_demo_3.mp4</code></div>
+              <span class="placeholder-tag"><i class="fas fa-video mr-1"></i> Flip Hamburger &bull; Demo 3 / 10</span>
+            </div>
+          </div>
+        </div>
+        <div id="video-pane-hamburger-4" class="demo-pane">
+          <div class="video-container">
+            <video class="video-player" controls autoplay loop muted playsinline style="display: none;">
+              <source src="./static/videos/flip_hamburger_demo_4.mp4" type="video/mp4">
+              Your browser does not support the video tag.
+            </video>
+            <div class="placeholder-overlay">
+              <div class="placeholder-icon">
+                <i class="fas fa-play-circle"></i>
+              </div>
+              <div class="placeholder-title">Flip Hamburger &mdash; Demo 4</div>
+              <div class="placeholder-text">Video placeholder. Place your video file at <code>static/videos/flip_hamburger_demo_4.mp4</code></div>
+              <span class="placeholder-tag"><i class="fas fa-video mr-1"></i> Flip Hamburger &bull; Demo 4 / 10</span>
+            </div>
+          </div>
+        </div>
+        <div id="video-pane-hamburger-5" class="demo-pane">
+          <div class="video-container">
+            <video class="video-player" controls autoplay loop muted playsinline style="display: none;">
+              <source src="./static/videos/flip_hamburger_demo_5.mp4" type="video/mp4">
+              Your browser does not support the video tag.
+            </video>
+            <div class="placeholder-overlay">
+              <div class="placeholder-icon">
+                <i class="fas fa-play-circle"></i>
+              </div>
+              <div class="placeholder-title">Flip Hamburger &mdash; Demo 5</div>
+              <div class="placeholder-text">Video placeholder. Place your video file at <code>static/videos/flip_hamburger_demo_5.mp4</code></div>
+              <span class="placeholder-tag"><i class="fas fa-video mr-1"></i> Flip Hamburger &bull; Demo 5 / 10</span>
+            </div>
+          </div>
+        </div>
+        <div id="video-pane-hamburger-6" class="demo-pane">
+          <div class="video-container">
+            <video class="video-player" controls autoplay loop muted playsinline style="display: none;">
+              <source src="./static/videos/flip_hamburger_demo_6.mp4" type="video/mp4">
+              Your browser does not support the video tag.
+            </video>
+            <div class="placeholder-overlay">
+              <div class="placeholder-icon">
+                <i class="fas fa-play-circle"></i>
+              </div>
+              <div class="placeholder-title">Flip Hamburger &mdash; Demo 6</div>
+              <div class="placeholder-text">Video placeholder. Place your video file at <code>static/videos/flip_hamburger_demo_6.mp4</code></div>
+              <span class="placeholder-tag"><i class="fas fa-video mr-1"></i> Flip Hamburger &bull; Demo 6 / 10</span>
+            </div>
+          </div>
+        </div>
+        <div id="video-pane-hamburger-7" class="demo-pane">
+          <div class="video-container">
+            <video class="video-player" controls autoplay loop muted playsinline style="display: none;">
+              <source src="./static/videos/flip_hamburger_demo_7.mp4" type="video/mp4">
+              Your browser does not support the video tag.
+            </video>
+            <div class="placeholder-overlay">
+              <div class="placeholder-icon">
+                <i class="fas fa-play-circle"></i>
+              </div>
+              <div class="placeholder-title">Flip Hamburger &mdash; Demo 7</div>
+              <div class="placeholder-text">Video placeholder. Place your video file at <code>static/videos/flip_hamburger_demo_7.mp4</code></div>
+              <span class="placeholder-tag"><i class="fas fa-video mr-1"></i> Flip Hamburger &bull; Demo 7 / 10</span>
+            </div>
+          </div>
+        </div>
+        <div id="video-pane-hamburger-8" class="demo-pane">
+          <div class="video-container">
+            <video class="video-player" controls autoplay loop muted playsinline style="display: none;">
+              <source src="./static/videos/flip_hamburger_demo_8.mp4" type="video/mp4">
+              Your browser does not support the video tag.
+            </video>
+            <div class="placeholder-overlay">
+              <div class="placeholder-icon">
+                <i class="fas fa-play-circle"></i>
+              </div>
+              <div class="placeholder-title">Flip Hamburger &mdash; Demo 8</div>
+              <div class="placeholder-text">Video placeholder. Place your video file at <code>static/videos/flip_hamburger_demo_8.mp4</code></div>
+              <span class="placeholder-tag"><i class="fas fa-video mr-1"></i> Flip Hamburger &bull; Demo 8 / 10</span>
+            </div>
+          </div>
+        </div>
+        <div id="video-pane-hamburger-9" class="demo-pane">
+          <div class="video-container">
+            <video class="video-player" controls autoplay loop muted playsinline style="display: none;">
+              <source src="./static/videos/flip_hamburger_demo_9.mp4" type="video/mp4">
+              Your browser does not support the video tag.
+            </video>
+            <div class="placeholder-overlay">
+              <div class="placeholder-icon">
+                <i class="fas fa-play-circle"></i>
+              </div>
+              <div class="placeholder-title">Flip Hamburger &mdash; Demo 9</div>
+              <div class="placeholder-text">Video placeholder. Place your video file at <code>static/videos/flip_hamburger_demo_9.mp4</code></div>
+              <span class="placeholder-tag"><i class="fas fa-video mr-1"></i> Flip Hamburger &bull; Demo 9 / 10</span>
+            </div>
+          </div>
+        </div>
+        <div id="video-pane-hamburger-10" class="demo-pane">
+          <div class="video-container">
+            <video class="video-player" controls autoplay loop muted playsinline style="display: none;">
+              <source src="./static/videos/flip_hamburger_demo_10.mp4" type="video/mp4">
+              Your browser does not support the video tag.
+            </video>
+            <div class="placeholder-overlay">
+              <div class="placeholder-icon">
+                <i class="fas fa-play-circle"></i>
+              </div>
+              <div class="placeholder-title">Flip Hamburger &mdash; Demo 10</div>
+              <div class="placeholder-text">Video placeholder. Place your video file at <code>static/videos/flip_hamburger_demo_10.mp4</code></div>
+              <span class="placeholder-tag"><i class="fas fa-video mr-1"></i> Flip Hamburger &bull; Demo 10 / 10</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Task Pane: Pack Cubes -->
+      <div id="pane-pack" class="task-pane">
+        <!-- 10 Demo Sub-tabs -->
+        <div class="tabs is-toggle is-small is-fullwidth demo-sub-tabs" id="subtabs-pack">
+          <ul>
+            <li class="demo-tab is-active" id="subtab-pack-1" onclick="switchDemoTab(event, 'pack', 1)">
+              <a><b>Demo 1</b></a>
+            </li>
+            <li class="demo-tab" id="subtab-pack-2" onclick="switchDemoTab(event, 'pack', 2)">
+              <a><b>Demo 2</b></a>
+            </li>
+            <li class="demo-tab" id="subtab-pack-3" onclick="switchDemoTab(event, 'pack', 3)">
+              <a><b>Demo 3</b></a>
+            </li>
+            <li class="demo-tab" id="subtab-pack-4" onclick="switchDemoTab(event, 'pack', 4)">
+              <a><b>Demo 4</b></a>
+            </li>
+            <li class="demo-tab" id="subtab-pack-5" onclick="switchDemoTab(event, 'pack', 5)">
+              <a><b>Demo 5</b></a>
+            </li>
+            <li class="demo-tab" id="subtab-pack-6" onclick="switchDemoTab(event, 'pack', 6)">
+              <a><b>Demo 6</b></a>
+            </li>
+            <li class="demo-tab" id="subtab-pack-7" onclick="switchDemoTab(event, 'pack', 7)">
+              <a><b>Demo 7</b></a>
+            </li>
+            <li class="demo-tab" id="subtab-pack-8" onclick="switchDemoTab(event, 'pack', 8)">
+              <a><b>Demo 8</b></a>
+            </li>
+            <li class="demo-tab" id="subtab-pack-9" onclick="switchDemoTab(event, 'pack', 9)">
+              <a><b>Demo 9</b></a>
+            </li>
+            <li class="demo-tab" id="subtab-pack-10" onclick="switchDemoTab(event, 'pack', 10)">
+              <a><b>Demo 10</b></a>
+            </li>
+          </ul>
+        </div>
+
+        <!-- 10 Demo Video Panes -->
+        <div id="video-pane-pack-1" class="demo-pane is-active">
+          <div class="video-container">
+            <video class="video-player" controls autoplay loop muted playsinline style="display: none;">
+              <source src="./static/videos/pack_cubes_demo_1.mp4" type="video/mp4">
+              Your browser does not support the video tag.
+            </video>
+            <div class="placeholder-overlay">
+              <div class="placeholder-icon">
+                <i class="fas fa-play-circle"></i>
+              </div>
+              <div class="placeholder-title">Pack Cubes &mdash; Demo 1</div>
+              <div class="placeholder-text">Video placeholder. Place your video file at <code>static/videos/pack_cubes_demo_1.mp4</code></div>
+              <span class="placeholder-tag"><i class="fas fa-video mr-1"></i> Pack Cubes &bull; Demo 1 / 10</span>
+            </div>
+          </div>
+        </div>
+        <div id="video-pane-pack-2" class="demo-pane">
+          <div class="video-container">
+            <video class="video-player" controls autoplay loop muted playsinline style="display: none;">
+              <source src="./static/videos/pack_cubes_demo_2.mp4" type="video/mp4">
+              Your browser does not support the video tag.
+            </video>
+            <div class="placeholder-overlay">
+              <div class="placeholder-icon">
+                <i class="fas fa-play-circle"></i>
+              </div>
+              <div class="placeholder-title">Pack Cubes &mdash; Demo 2</div>
+              <div class="placeholder-text">Video placeholder. Place your video file at <code>static/videos/pack_cubes_demo_2.mp4</code></div>
+              <span class="placeholder-tag"><i class="fas fa-video mr-1"></i> Pack Cubes &bull; Demo 2 / 10</span>
+            </div>
+          </div>
+        </div>
+        <div id="video-pane-pack-3" class="demo-pane">
+          <div class="video-container">
+            <video class="video-player" controls autoplay loop muted playsinline style="display: none;">
+              <source src="./static/videos/pack_cubes_demo_3.mp4" type="video/mp4">
+              Your browser does not support the video tag.
+            </video>
+            <div class="placeholder-overlay">
+              <div class="placeholder-icon">
+                <i class="fas fa-play-circle"></i>
+              </div>
+              <div class="placeholder-title">Pack Cubes &mdash; Demo 3</div>
+              <div class="placeholder-text">Video placeholder. Place your video file at <code>static/videos/pack_cubes_demo_3.mp4</code></div>
+              <span class="placeholder-tag"><i class="fas fa-video mr-1"></i> Pack Cubes &bull; Demo 3 / 10</span>
+            </div>
+          </div>
+        </div>
+        <div id="video-pane-pack-4" class="demo-pane">
+          <div class="video-container">
+            <video class="video-player" controls autoplay loop muted playsinline style="display: none;">
+              <source src="./static/videos/pack_cubes_demo_4.mp4" type="video/mp4">
+              Your browser does not support the video tag.
+            </video>
+            <div class="placeholder-overlay">
+              <div class="placeholder-icon">
+                <i class="fas fa-play-circle"></i>
+              </div>
+              <div class="placeholder-title">Pack Cubes &mdash; Demo 4</div>
+              <div class="placeholder-text">Video placeholder. Place your video file at <code>static/videos/pack_cubes_demo_4.mp4</code></div>
+              <span class="placeholder-tag"><i class="fas fa-video mr-1"></i> Pack Cubes &bull; Demo 4 / 10</span>
+            </div>
+          </div>
+        </div>
+        <div id="video-pane-pack-5" class="demo-pane">
+          <div class="video-container">
+            <video class="video-player" controls autoplay loop muted playsinline style="display: none;">
+              <source src="./static/videos/pack_cubes_demo_5.mp4" type="video/mp4">
+              Your browser does not support the video tag.
+            </video>
+            <div class="placeholder-overlay">
+              <div class="placeholder-icon">
+                <i class="fas fa-play-circle"></i>
+              </div>
+              <div class="placeholder-title">Pack Cubes &mdash; Demo 5</div>
+              <div class="placeholder-text">Video placeholder. Place your video file at <code>static/videos/pack_cubes_demo_5.mp4</code></div>
+              <span class="placeholder-tag"><i class="fas fa-video mr-1"></i> Pack Cubes &bull; Demo 5 / 10</span>
+            </div>
+          </div>
+        </div>
+        <div id="video-pane-pack-6" class="demo-pane">
+          <div class="video-container">
+            <video class="video-player" controls autoplay loop muted playsinline style="display: none;">
+              <source src="./static/videos/pack_cubes_demo_6.mp4" type="video/mp4">
+              Your browser does not support the video tag.
+            </video>
+            <div class="placeholder-overlay">
+              <div class="placeholder-icon">
+                <i class="fas fa-play-circle"></i>
+              </div>
+              <div class="placeholder-title">Pack Cubes &mdash; Demo 6</div>
+              <div class="placeholder-text">Video placeholder. Place your video file at <code>static/videos/pack_cubes_demo_6.mp4</code></div>
+              <span class="placeholder-tag"><i class="fas fa-video mr-1"></i> Pack Cubes &bull; Demo 6 / 10</span>
+            </div>
+          </div>
+        </div>
+        <div id="video-pane-pack-7" class="demo-pane">
+          <div class="video-container">
+            <video class="video-player" controls autoplay loop muted playsinline style="display: none;">
+              <source src="./static/videos/pack_cubes_demo_7.mp4" type="video/mp4">
+              Your browser does not support the video tag.
+            </video>
+            <div class="placeholder-overlay">
+              <div class="placeholder-icon">
+                <i class="fas fa-play-circle"></i>
+              </div>
+              <div class="placeholder-title">Pack Cubes &mdash; Demo 7</div>
+              <div class="placeholder-text">Video placeholder. Place your video file at <code>static/videos/pack_cubes_demo_7.mp4</code></div>
+              <span class="placeholder-tag"><i class="fas fa-video mr-1"></i> Pack Cubes &bull; Demo 7 / 10</span>
+            </div>
+          </div>
+        </div>
+        <div id="video-pane-pack-8" class="demo-pane">
+          <div class="video-container">
+            <video class="video-player" controls autoplay loop muted playsinline style="display: none;">
+              <source src="./static/videos/pack_cubes_demo_8.mp4" type="video/mp4">
+              Your browser does not support the video tag.
+            </video>
+            <div class="placeholder-overlay">
+              <div class="placeholder-icon">
+                <i class="fas fa-play-circle"></i>
+              </div>
+              <div class="placeholder-title">Pack Cubes &mdash; Demo 8</div>
+              <div class="placeholder-text">Video placeholder. Place your video file at <code>static/videos/pack_cubes_demo_8.mp4</code></div>
+              <span class="placeholder-tag"><i class="fas fa-video mr-1"></i> Pack Cubes &bull; Demo 8 / 10</span>
+            </div>
+          </div>
+        </div>
+        <div id="video-pane-pack-9" class="demo-pane">
+          <div class="video-container">
+            <video class="video-player" controls autoplay loop muted playsinline style="display: none;">
+              <source src="./static/videos/pack_cubes_demo_9.mp4" type="video/mp4">
+              Your browser does not support the video tag.
+            </video>
+            <div class="placeholder-overlay">
+              <div class="placeholder-icon">
+                <i class="fas fa-play-circle"></i>
+              </div>
+              <div class="placeholder-title">Pack Cubes &mdash; Demo 9</div>
+              <div class="placeholder-text">Video placeholder. Place your video file at <code>static/videos/pack_cubes_demo_9.mp4</code></div>
+              <span class="placeholder-tag"><i class="fas fa-video mr-1"></i> Pack Cubes &bull; Demo 9 / 10</span>
+            </div>
+          </div>
+        </div>
+        <div id="video-pane-pack-10" class="demo-pane">
+          <div class="video-container">
+            <video class="video-player" controls autoplay loop muted playsinline style="display: none;">
+              <source src="./static/videos/pack_cubes_demo_10.mp4" type="video/mp4">
+              Your browser does not support the video tag.
+            </video>
+            <div class="placeholder-overlay">
+              <div class="placeholder-icon">
+                <i class="fas fa-play-circle"></i>
+              </div>
+              <div class="placeholder-title">Pack Cubes &mdash; Demo 10</div>
+              <div class="placeholder-text">Video placeholder. Place your video file at <code>static/videos/pack_cubes_demo_10.mp4</code></div>
+              <span class="placeholder-tag"><i class="fas fa-video mr-1"></i> Pack Cubes &bull; Demo 10 / 10</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- Footer -->
+<footer class="footer">
+  <div class="container">
+    <div class="content has-text-centered">
+      <p class="is-size-7 has-text-grey">
+        This website template is inspired by <a href="https://xingyu-lin.github.io/atm/" target="_blank">ATM</a> and <a href="https://nerfies.github.io" target="_blank">Nerfies</a>.
+      </p>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>
