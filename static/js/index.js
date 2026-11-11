@@ -26,7 +26,7 @@ function switchTaskTab(evt, taskId) {
     const activeDemoPane = selectedPane.querySelector('.demo-pane.is-active');
     if (activeDemoPane) {
       const activeVideo = activeDemoPane.querySelector('video');
-      if (activeVideo && activeVideo.src && !activeVideo.src.endsWith('/')) {
+      if (activeVideo && (activeVideo.currentSrc || activeVideo.src)) {
         activeVideo.play().catch(e => console.log("Autoplay notice:", e));
       }
     }
@@ -60,14 +60,14 @@ function switchDemoTab(evt, taskId, demoIndex) {
   if (selectedDemoPane) {
     selectedDemoPane.classList.add('is-active');
     const activeVideo = selectedDemoPane.querySelector('video');
-    if (activeVideo && activeVideo.src && !activeVideo.src.endsWith('/')) {
+    if (activeVideo && (activeVideo.currentSrc || activeVideo.src)) {
       activeVideo.play().catch(e => console.log("Autoplay notice:", e));
     }
   }
 }
 
 document.addEventListener('DOMContentLoaded', function() {
-  // Listen for video loaded/error states on all 30 video players
+  // Listen for video loaded/error states on all video players
   document.querySelectorAll('.video-player').forEach(video => {
     video.addEventListener('loadeddata', function() {
       if (this.videoWidth > 0) {
