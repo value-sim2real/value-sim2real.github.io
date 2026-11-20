@@ -1,6 +1,7 @@
 function isVideoSelected(video) {
+  const demoPane = video.closest('.demo-pane');
   return video.closest('.task-pane').classList.contains('is-active') &&
-    video.closest('.demo-pane').classList.contains('is-active');
+    (!demoPane || demoPane.classList.contains('is-active'));
 }
 
 function updateVideoState(video) {
@@ -18,9 +19,11 @@ function playSelectedVideo(video) {
   video.play().catch(() => {});
 }
 
-function switchTaskTab(evt, taskId) {
+function switchTaskTab(evt, taskId, tabsId = 'policyTaskTabs') {
+  if (evt) evt.preventDefault();
+  const taskTabs = document.getElementById(tabsId);
   // Update main task tabs
-  const tabList = document.querySelectorAll('#policyTaskTabs li');
+  const tabList = taskTabs.querySelectorAll('li');
   tabList.forEach(tab => tab.classList.remove('is-active'));
   if (evt && evt.currentTarget) {
     evt.currentTarget.classList.add('is-active');
@@ -30,7 +33,7 @@ function switchTaskTab(evt, taskId) {
   }
 
   // Update task panes
-  const taskPanes = document.querySelectorAll('.task-pane');
+  const taskPanes = taskTabs.closest('section').querySelectorAll('.task-pane');
   taskPanes.forEach(pane => {
     pane.classList.remove('is-active');
     // Pause any playing videos in hidden panes
@@ -42,12 +45,10 @@ function switchTaskTab(evt, taskId) {
   const selectedPane = document.getElementById(`pane-${taskId}`);
   if (selectedPane) {
     selectedPane.classList.add('is-active');
-    // Play video in the currently active demo pane if available
+    // Some sections have demo sub-tabs; others have one video per task.
     const activeDemoPane = selectedPane.querySelector('.demo-pane.is-active');
-    if (activeDemoPane) {
-      const activeVideo = activeDemoPane.querySelector('video');
-      playSelectedVideo(activeVideo);
-    }
+    const activeVideo = (activeDemoPane || selectedPane).querySelector('video');
+    playSelectedVideo(activeVideo);
   }
 }
 

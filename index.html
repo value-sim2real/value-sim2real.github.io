@@ -700,6 +700,84 @@
   </div>
 </section>
 
+<!-- Full Real-World RL Process Section -->
+<section class="section" id="real-world-rl-process" style="padding-top: 1rem;">
+  <div class="container is-max-desktop">
+    <div class="columns is-multiline">
+      <div class="column is-12">
+        <h2 class="title is-3">Full Real-World RL Process</h2>
+      </div>
+    </div>
+
+    <div class="tabs is-toggle is-fullwidth" id="rlProcessTaskTabs">
+      <ul>
+        <li class="tablinks is-active" id="tab-process-push" onclick="switchTaskTab(event, 'process-push', 'rlProcessTaskTabs')">
+          <a href="#pane-process-push"><span><b>Push Cube</b></span></a>
+        </li>
+        <li class="tablinks" id="tab-process-hamburger" onclick="switchTaskTab(event, 'process-hamburger', 'rlProcessTaskTabs')">
+          <a href="#pane-process-hamburger"><span><b>Flip Hamburger</b></span></a>
+        </li>
+        <li class="tablinks" id="tab-process-pack" onclick="switchTaskTab(event, 'process-pack', 'rlProcessTaskTabs')">
+          <a href="#pane-process-pack"><span><b>Pack Cubes</b></span></a>
+        </li>
+      </ul>
+    </div>
+
+    <div class="video-card">
+      <div id="pane-process-push" class="task-pane is-active">
+        <div class="video-container" data-state="loading">
+          <video class="video-player" controls autoplay preload="auto" loop muted playsinline aria-label="Push Cube full real-world RL process">
+            <source src="./videos/pushcube123.mp4" type="video/mp4">
+            Your browser does not support the video tag.
+          </video>
+          <div class="video-loading" role="status">
+            <span class="video-spinner" aria-hidden="true"></span>
+            <span>Loading video…</span>
+          </div>
+          <div class="video-error" role="alert">
+            <p>Video could not be loaded.</p>
+            <button type="button" class="button is-small is-light video-retry">Retry</button>
+          </div>
+        </div>
+      </div>
+
+      <div id="pane-process-hamburger" class="task-pane">
+        <div class="video-container" data-state="loading">
+          <video class="video-player" controls preload="none" loop muted playsinline aria-label="Flip Hamburger full real-world RL process">
+            <source src="./videos/hamburger123.mp4" type="video/mp4">
+            Your browser does not support the video tag.
+          </video>
+          <div class="video-loading" role="status">
+            <span class="video-spinner" aria-hidden="true"></span>
+            <span>Loading video…</span>
+          </div>
+          <div class="video-error" role="alert">
+            <p>Video could not be loaded.</p>
+            <button type="button" class="button is-small is-light video-retry">Retry</button>
+          </div>
+        </div>
+      </div>
+
+      <div id="pane-process-pack" class="task-pane">
+        <div class="video-container" data-state="loading">
+          <video class="video-player" controls preload="none" loop muted playsinline aria-label="Pack Cubes full real-world RL process">
+            <source src="./videos/packcube123.mp4" type="video/mp4">
+            Your browser does not support the video tag.
+          </video>
+          <div class="video-loading" role="status">
+            <span class="video-spinner" aria-hidden="true"></span>
+            <span>Loading video…</span>
+          </div>
+          <div class="video-error" role="alert">
+            <p>Video could not be loaded.</p>
+            <button type="button" class="button is-small is-light video-retry">Retry</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
 <!-- Footer -->
 <footer class="footer">
   <div class="container">
