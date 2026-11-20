@@ -1,3 +1,23 @@
+function isVideoSelected(video) {
+  return video.closest('.task-pane').classList.contains('is-active') &&
+    video.closest('.demo-pane').classList.contains('is-active');
+}
+
+function updateVideoState(video) {
+  const container = video.closest('.video-container');
+  container.dataset.state = video.error || video.networkState === HTMLMediaElement.NETWORK_NO_SOURCE ? 'error' :
+    video.readyState >= HTMLMediaElement.HAVE_CURRENT_DATA ? 'ready' : 'loading';
+}
+
+function playSelectedVideo(video) {
+  if (!video || !isVideoSelected(video)) return;
+  video.preload = 'auto';
+  updateVideoState(video);
+  // play() also starts loading videos whose preload was initially "none".
+  // Native controls remain available if the browser blocks autoplay.
+  video.play().catch(() => {});
+}
+
 function switchTaskTab(evt, taskId) {
   // Update main task tabs
   const tabList = document.querySelectorAll('#policyTaskTabs li');
@@ -26,9 +46,7 @@ function switchTaskTab(evt, taskId) {
     const activeDemoPane = selectedPane.querySelector('.demo-pane.is-active');
     if (activeDemoPane) {
       const activeVideo = activeDemoPane.querySelector('video');
-      if (activeVideo && (activeVideo.currentSrc || activeVideo.src)) {
-        activeVideo.play().catch(e => console.log("Autoplay notice:", e));
-      }
+      playSelectedVideo(activeVideo);
     }
   }
 }
@@ -60,31 +78,37 @@ function switchDemoTab(evt, taskId, demoIndex) {
   if (selectedDemoPane) {
     selectedDemoPane.classList.add('is-active');
     const activeVideo = selectedDemoPane.querySelector('video');
-    if (activeVideo && (activeVideo.currentSrc || activeVideo.src)) {
-      activeVideo.play().catch(e => console.log("Autoplay notice:", e));
-    }
+    playSelectedVideo(activeVideo);
   }
 }
 
 document.addEventListener('DOMContentLoaded', function() {
-  // Listen for video loaded/error states on all video players
   document.querySelectorAll('.video-player').forEach(video => {
-    video.addEventListener('loadeddata', function() {
-      if (this.videoWidth > 0) {
-        this.style.display = 'block';
-        const placeholder = this.parentElement.querySelector('.placeholder-overlay');
-        if (placeholder) {
-          placeholder.style.display = 'none';
-        }
-      }
+    const container = video.closest('.video-container');
+    const showError = () => { container.dataset.state = 'error'; };
+
+    video.addEventListener('loadeddata', () => updateVideoState(video));
+    video.addEventListener('canplay', () => updateVideoState(video));
+    video.addEventListener('playing', () => {
+      // A play request can finish after the visitor has switched tabs.
+      if (!isVideoSelected(video)) video.pause();
+      updateVideoState(video);
+    });
+    video.addEventListener('emptied', () => updateVideoState(video));
+    video.addEventListener('error', showError);
+    // Failed <source> requests do not bubble an error to the <video>.
+    video.querySelectorAll('source').forEach(source => {
+      source.addEventListener('error', showError);
     });
 
-    video.addEventListener('error', function() {
-      this.style.display = 'none';
-      const placeholder = this.parentElement.querySelector('.placeholder-overlay');
-      if (placeholder) {
-        placeholder.style.display = 'flex';
-      }
+    container.querySelector('.video-retry').addEventListener('click', () => {
+      container.dataset.state = 'loading';
+      video.load();
+      playSelectedVideo(video);
     });
+
+    // Cached videos may have loaded before these listeners were registered.
+    updateVideoState(video);
+    playSelectedVideo(video);
   });
 });

@@ -241,130 +241,130 @@
 
         <!-- 8 Success/Failure Video Panes -->
         <div id="video-pane-push-1" class="demo-pane is-active">
-          <div class="video-container">
-            <video class="video-player" controls autoplay loop muted playsinline style="display: none;">
+          <div class="video-container" data-state="loading">
+            <video class="video-player" controls autoplay preload="auto" loop muted playsinline>
               <source src="./videos/pushcube_success1.mp4" type="video/mp4">
               Your browser does not support the video tag.
             </video>
-            <div class="placeholder-overlay">
-              <div class="placeholder-icon">
-                <i class="fas fa-play-circle"></i>
-              </div>
-              <div class="placeholder-title">Push Cube &mdash; Success 1</div>
-              <div class="placeholder-text">Video placeholder. Place your video file at <code>videos/pushcube_success1.mp4</code></div>
-              <span class="placeholder-tag"><i class="fas fa-video mr-1"></i> Push Cube &bull; Success 1 / 8</span>
+            <div class="video-loading" role="status">
+              <span class="video-spinner" aria-hidden="true"></span>
+              <span>Loading video…</span>
+            </div>
+            <div class="video-error" role="alert">
+              <p>Video could not be loaded.</p>
+              <button type="button" class="button is-small is-light video-retry">Retry</button>
             </div>
           </div>
         </div>
         <div id="video-pane-push-2" class="demo-pane">
-          <div class="video-container">
-            <video class="video-player" controls autoplay loop muted playsinline style="display: none;">
+          <div class="video-container" data-state="loading">
+            <video class="video-player" controls preload="none" loop muted playsinline>
               <source src="./videos/pushcube_success2.mp4" type="video/mp4">
               Your browser does not support the video tag.
             </video>
-            <div class="placeholder-overlay">
-              <div class="placeholder-icon">
-                <i class="fas fa-play-circle"></i>
-              </div>
-              <div class="placeholder-title">Push Cube &mdash; Success 2</div>
-              <div class="placeholder-text">Video placeholder. Place your video file at <code>videos/pushcube_success2.mp4</code></div>
-              <span class="placeholder-tag"><i class="fas fa-video mr-1"></i> Push Cube &bull; Success 2 / 8</span>
+            <div class="video-loading" role="status">
+              <span class="video-spinner" aria-hidden="true"></span>
+              <span>Loading video…</span>
+            </div>
+            <div class="video-error" role="alert">
+              <p>Video could not be loaded.</p>
+              <button type="button" class="button is-small is-light video-retry">Retry</button>
             </div>
           </div>
         </div>
         <div id="video-pane-push-3" class="demo-pane">
-          <div class="video-container">
-            <video class="video-player" controls autoplay loop muted playsinline style="display: none;">
+          <div class="video-container" data-state="loading">
+            <video class="video-player" controls preload="none" loop muted playsinline>
               <source src="./videos/pushcube_success3.mp4" type="video/mp4">
               Your browser does not support the video tag.
             </video>
-            <div class="placeholder-overlay">
-              <div class="placeholder-icon">
-                <i class="fas fa-play-circle"></i>
-              </div>
-              <div class="placeholder-title">Push Cube &mdash; Success 3</div>
-              <div class="placeholder-text">Video placeholder. Place your video file at <code>videos/pushcube_success3.mp4</code></div>
-              <span class="placeholder-tag"><i class="fas fa-video mr-1"></i> Push Cube &bull; Success 3 / 8</span>
+            <div class="video-loading" role="status">
+              <span class="video-spinner" aria-hidden="true"></span>
+              <span>Loading video…</span>
+            </div>
+            <div class="video-error" role="alert">
+              <p>Video could not be loaded.</p>
+              <button type="button" class="button is-small is-light video-retry">Retry</button>
             </div>
           </div>
         </div>
         <div id="video-pane-push-4" class="demo-pane">
-          <div class="video-container">
-            <video class="video-player" controls autoplay loop muted playsinline style="display: none;">
+          <div class="video-container" data-state="loading">
+            <video class="video-player" controls preload="none" loop muted playsinline>
               <source src="./videos/pushcube_success4.mp4" type="video/mp4">
               Your browser does not support the video tag.
             </video>
-            <div class="placeholder-overlay">
-              <div class="placeholder-icon">
-                <i class="fas fa-play-circle"></i>
-              </div>
-              <div class="placeholder-title">Push Cube &mdash; Success 4</div>
-              <div class="placeholder-text">Video placeholder. Place your video file at <code>videos/pushcube_success4.mp4</code></div>
-              <span class="placeholder-tag"><i class="fas fa-video mr-1"></i> Push Cube &bull; Success 4 / 8</span>
+            <div class="video-loading" role="status">
+              <span class="video-spinner" aria-hidden="true"></span>
+              <span>Loading video…</span>
+            </div>
+            <div class="video-error" role="alert">
+              <p>Video could not be loaded.</p>
+              <button type="button" class="button is-small is-light video-retry">Retry</button>
             </div>
           </div>
         </div>
         <div id="video-pane-push-5" class="demo-pane">
-          <div class="video-container">
-            <video class="video-player" controls autoplay loop muted playsinline style="display: none;">
+          <div class="video-container" data-state="loading">
+            <video class="video-player" controls preload="none" loop muted playsinline>
               <source src="./videos/pushcube_failure1.mp4" type="video/mp4">
               Your browser does not support the video tag.
             </video>
-            <div class="placeholder-overlay">
-              <div class="placeholder-icon">
-                <i class="fas fa-play-circle"></i>
-              </div>
-              <div class="placeholder-title">Push Cube &mdash; Failure 1</div>
-              <div class="placeholder-text">Video placeholder. Place your video file at <code>videos/pushcube_failure1.mp4</code></div>
-              <span class="placeholder-tag"><i class="fas fa-video mr-1"></i> Push Cube &bull; Failure 1 / 8</span>
+            <div class="video-loading" role="status">
+              <span class="video-spinner" aria-hidden="true"></span>
+              <span>Loading video…</span>
+            </div>
+            <div class="video-error" role="alert">
+              <p>Video could not be loaded.</p>
+              <button type="button" class="button is-small is-light video-retry">Retry</button>
             </div>
           </div>
         </div>
         <div id="video-pane-push-6" class="demo-pane">
-          <div class="video-container">
-            <video class="video-player" controls autoplay loop muted playsinline style="display: none;">
+          <div class="video-container" data-state="loading">
+            <video class="video-player" controls preload="none" loop muted playsinline>
               <source src="./videos/pushcube_failure2.mp4" type="video/mp4">
               Your browser does not support the video tag.
             </video>
-            <div class="placeholder-overlay">
-              <div class="placeholder-icon">
-                <i class="fas fa-play-circle"></i>
-              </div>
-              <div class="placeholder-title">Push Cube &mdash; Failure 2</div>
-              <div class="placeholder-text">Video placeholder. Place your video file at <code>videos/pushcube_failure2.mp4</code></div>
-              <span class="placeholder-tag"><i class="fas fa-video mr-1"></i> Push Cube &bull; Failure 2 / 8</span>
+            <div class="video-loading" role="status">
+              <span class="video-spinner" aria-hidden="true"></span>
+              <span>Loading video…</span>
+            </div>
+            <div class="video-error" role="alert">
+              <p>Video could not be loaded.</p>
+              <button type="button" class="button is-small is-light video-retry">Retry</button>
             </div>
           </div>
         </div>
         <div id="video-pane-push-7" class="demo-pane">
-          <div class="video-container">
-            <video class="video-player" controls autoplay loop muted playsinline style="display: none;">
+          <div class="video-container" data-state="loading">
+            <video class="video-player" controls preload="none" loop muted playsinline>
               <source src="./videos/pushcube_failure3.mp4" type="video/mp4">
               Your browser does not support the video tag.
             </video>
-            <div class="placeholder-overlay">
-              <div class="placeholder-icon">
-                <i class="fas fa-play-circle"></i>
-              </div>
-              <div class="placeholder-title">Push Cube &mdash; Failure 3</div>
-              <div class="placeholder-text">Video placeholder. Place your video file at <code>videos/pushcube_failure3.mp4</code></div>
-              <span class="placeholder-tag"><i class="fas fa-video mr-1"></i> Push Cube &bull; Failure 3 / 8</span>
+            <div class="video-loading" role="status">
+              <span class="video-spinner" aria-hidden="true"></span>
+              <span>Loading video…</span>
+            </div>
+            <div class="video-error" role="alert">
+              <p>Video could not be loaded.</p>
+              <button type="button" class="button is-small is-light video-retry">Retry</button>
             </div>
           </div>
         </div>
         <div id="video-pane-push-8" class="demo-pane">
-          <div class="video-container">
-            <video class="video-player" controls autoplay loop muted playsinline style="display: none;">
+          <div class="video-container" data-state="loading">
+            <video class="video-player" controls preload="none" loop muted playsinline>
               <source src="./videos/pushcube_failure4.mp4" type="video/mp4">
               Your browser does not support the video tag.
             </video>
-            <div class="placeholder-overlay">
-              <div class="placeholder-icon">
-                <i class="fas fa-play-circle"></i>
-              </div>
-              <div class="placeholder-title">Push Cube &mdash; Failure 4</div>
-              <div class="placeholder-text">Video placeholder. Place your video file at <code>videos/pushcube_failure4.mp4</code></div>
-              <span class="placeholder-tag"><i class="fas fa-video mr-1"></i> Push Cube &bull; Failure 4 / 8</span>
+            <div class="video-loading" role="status">
+              <span class="video-spinner" aria-hidden="true"></span>
+              <span>Loading video…</span>
+            </div>
+            <div class="video-error" role="alert">
+              <p>Video could not be loaded.</p>
+              <button type="button" class="button is-small is-light video-retry">Retry</button>
             </div>
           </div>
         </div>
@@ -404,130 +404,130 @@
 
         <!-- 8 Success/Failure Video Panes -->
         <div id="video-pane-hamburger-1" class="demo-pane is-active">
-          <div class="video-container">
-            <video class="video-player" controls autoplay loop muted playsinline style="display: none;">
+          <div class="video-container" data-state="loading">
+            <video class="video-player" controls preload="none" loop muted playsinline>
               <source src="./videos/hamburger_success1.mp4" type="video/mp4">
               Your browser does not support the video tag.
             </video>
-            <div class="placeholder-overlay">
-              <div class="placeholder-icon">
-                <i class="fas fa-play-circle"></i>
-              </div>
-              <div class="placeholder-title">Flip Hamburger &mdash; Success 1</div>
-              <div class="placeholder-text">Video placeholder. Place your video file at <code>videos/hamburger_success1.mp4</code></div>
-              <span class="placeholder-tag"><i class="fas fa-video mr-1"></i> Flip Hamburger &bull; Success 1 / 8</span>
+            <div class="video-loading" role="status">
+              <span class="video-spinner" aria-hidden="true"></span>
+              <span>Loading video…</span>
+            </div>
+            <div class="video-error" role="alert">
+              <p>Video could not be loaded.</p>
+              <button type="button" class="button is-small is-light video-retry">Retry</button>
             </div>
           </div>
         </div>
         <div id="video-pane-hamburger-2" class="demo-pane">
-          <div class="video-container">
-            <video class="video-player" controls autoplay loop muted playsinline style="display: none;">
+          <div class="video-container" data-state="loading">
+            <video class="video-player" controls preload="none" loop muted playsinline>
               <source src="./videos/hamburger_success2.mp4" type="video/mp4">
               Your browser does not support the video tag.
             </video>
-            <div class="placeholder-overlay">
-              <div class="placeholder-icon">
-                <i class="fas fa-play-circle"></i>
-              </div>
-              <div class="placeholder-title">Flip Hamburger &mdash; Success 2</div>
-              <div class="placeholder-text">Video placeholder. Place your video file at <code>videos/hamburger_success2.mp4</code></div>
-              <span class="placeholder-tag"><i class="fas fa-video mr-1"></i> Flip Hamburger &bull; Success 2 / 8</span>
+            <div class="video-loading" role="status">
+              <span class="video-spinner" aria-hidden="true"></span>
+              <span>Loading video…</span>
+            </div>
+            <div class="video-error" role="alert">
+              <p>Video could not be loaded.</p>
+              <button type="button" class="button is-small is-light video-retry">Retry</button>
             </div>
           </div>
         </div>
         <div id="video-pane-hamburger-3" class="demo-pane">
-          <div class="video-container">
-            <video class="video-player" controls autoplay loop muted playsinline style="display: none;">
+          <div class="video-container" data-state="loading">
+            <video class="video-player" controls preload="none" loop muted playsinline>
               <source src="./videos/hamburger_success3.mp4" type="video/mp4">
               Your browser does not support the video tag.
             </video>
-            <div class="placeholder-overlay">
-              <div class="placeholder-icon">
-                <i class="fas fa-play-circle"></i>
-              </div>
-              <div class="placeholder-title">Flip Hamburger &mdash; Success 3</div>
-              <div class="placeholder-text">Video placeholder. Place your video file at <code>videos/hamburger_success3.mp4</code></div>
-              <span class="placeholder-tag"><i class="fas fa-video mr-1"></i> Flip Hamburger &bull; Success 3 / 8</span>
+            <div class="video-loading" role="status">
+              <span class="video-spinner" aria-hidden="true"></span>
+              <span>Loading video…</span>
+            </div>
+            <div class="video-error" role="alert">
+              <p>Video could not be loaded.</p>
+              <button type="button" class="button is-small is-light video-retry">Retry</button>
             </div>
           </div>
         </div>
         <div id="video-pane-hamburger-4" class="demo-pane">
-          <div class="video-container">
-            <video class="video-player" controls autoplay loop muted playsinline style="display: none;">
+          <div class="video-container" data-state="loading">
+            <video class="video-player" controls preload="none" loop muted playsinline>
               <source src="./videos/hamburger_success4.mp4" type="video/mp4">
               Your browser does not support the video tag.
             </video>
-            <div class="placeholder-overlay">
-              <div class="placeholder-icon">
-                <i class="fas fa-play-circle"></i>
-              </div>
-              <div class="placeholder-title">Flip Hamburger &mdash; Success 4</div>
-              <div class="placeholder-text">Video placeholder. Place your video file at <code>videos/hamburger_success4.mp4</code></div>
-              <span class="placeholder-tag"><i class="fas fa-video mr-1"></i> Flip Hamburger &bull; Success 4 / 8</span>
+            <div class="video-loading" role="status">
+              <span class="video-spinner" aria-hidden="true"></span>
+              <span>Loading video…</span>
+            </div>
+            <div class="video-error" role="alert">
+              <p>Video could not be loaded.</p>
+              <button type="button" class="button is-small is-light video-retry">Retry</button>
             </div>
           </div>
         </div>
         <div id="video-pane-hamburger-5" class="demo-pane">
-          <div class="video-container">
-            <video class="video-player" controls autoplay loop muted playsinline style="display: none;">
+          <div class="video-container" data-state="loading">
+            <video class="video-player" controls preload="none" loop muted playsinline>
               <source src="./videos/hamburger_failure1.mp4" type="video/mp4">
               Your browser does not support the video tag.
             </video>
-            <div class="placeholder-overlay">
-              <div class="placeholder-icon">
-                <i class="fas fa-play-circle"></i>
-              </div>
-              <div class="placeholder-title">Flip Hamburger &mdash; Failure 1</div>
-              <div class="placeholder-text">Video placeholder. Place your video file at <code>videos/hamburger_failure1.mp4</code></div>
-              <span class="placeholder-tag"><i class="fas fa-video mr-1"></i> Flip Hamburger &bull; Failure 1 / 8</span>
+            <div class="video-loading" role="status">
+              <span class="video-spinner" aria-hidden="true"></span>
+              <span>Loading video…</span>
+            </div>
+            <div class="video-error" role="alert">
+              <p>Video could not be loaded.</p>
+              <button type="button" class="button is-small is-light video-retry">Retry</button>
             </div>
           </div>
         </div>
         <div id="video-pane-hamburger-6" class="demo-pane">
-          <div class="video-container">
-            <video class="video-player" controls autoplay loop muted playsinline style="display: none;">
+          <div class="video-container" data-state="loading">
+            <video class="video-player" controls preload="none" loop muted playsinline>
               <source src="./videos/hamburger_failure2.mp4" type="video/mp4">
               Your browser does not support the video tag.
             </video>
-            <div class="placeholder-overlay">
-              <div class="placeholder-icon">
-                <i class="fas fa-play-circle"></i>
-              </div>
-              <div class="placeholder-title">Flip Hamburger &mdash; Failure 2</div>
-              <div class="placeholder-text">Video placeholder. Place your video file at <code>videos/hamburger_failure2.mp4</code></div>
-              <span class="placeholder-tag"><i class="fas fa-video mr-1"></i> Flip Hamburger &bull; Failure 2 / 8</span>
+            <div class="video-loading" role="status">
+              <span class="video-spinner" aria-hidden="true"></span>
+              <span>Loading video…</span>
+            </div>
+            <div class="video-error" role="alert">
+              <p>Video could not be loaded.</p>
+              <button type="button" class="button is-small is-light video-retry">Retry</button>
             </div>
           </div>
         </div>
         <div id="video-pane-hamburger-7" class="demo-pane">
-          <div class="video-container">
-            <video class="video-player" controls autoplay loop muted playsinline style="display: none;">
+          <div class="video-container" data-state="loading">
+            <video class="video-player" controls preload="none" loop muted playsinline>
               <source src="./videos/hamburger_failure3.mp4" type="video/mp4">
               Your browser does not support the video tag.
             </video>
-            <div class="placeholder-overlay">
-              <div class="placeholder-icon">
-                <i class="fas fa-play-circle"></i>
-              </div>
-              <div class="placeholder-title">Flip Hamburger &mdash; Failure 3</div>
-              <div class="placeholder-text">Video placeholder. Place your video file at <code>videos/hamburger_failure3.mp4</code></div>
-              <span class="placeholder-tag"><i class="fas fa-video mr-1"></i> Flip Hamburger &bull; Failure 3 / 8</span>
+            <div class="video-loading" role="status">
+              <span class="video-spinner" aria-hidden="true"></span>
+              <span>Loading video…</span>
+            </div>
+            <div class="video-error" role="alert">
+              <p>Video could not be loaded.</p>
+              <button type="button" class="button is-small is-light video-retry">Retry</button>
             </div>
           </div>
         </div>
         <div id="video-pane-hamburger-8" class="demo-pane">
-          <div class="video-container">
-            <video class="video-player" controls autoplay loop muted playsinline style="display: none;">
+          <div class="video-container" data-state="loading">
+            <video class="video-player" controls preload="none" loop muted playsinline>
               <source src="./videos/hamburger_failure4.mp4" type="video/mp4">
               Your browser does not support the video tag.
             </video>
-            <div class="placeholder-overlay">
-              <div class="placeholder-icon">
-                <i class="fas fa-play-circle"></i>
-              </div>
-              <div class="placeholder-title">Flip Hamburger &mdash; Failure 4</div>
-              <div class="placeholder-text">Video placeholder. Place your video file at <code>videos/hamburger_failure4.mp4</code></div>
-              <span class="placeholder-tag"><i class="fas fa-video mr-1"></i> Flip Hamburger &bull; Failure 4 / 8</span>
+            <div class="video-loading" role="status">
+              <span class="video-spinner" aria-hidden="true"></span>
+              <span>Loading video…</span>
+            </div>
+            <div class="video-error" role="alert">
+              <p>Video could not be loaded.</p>
+              <button type="button" class="button is-small is-light video-retry">Retry</button>
             </div>
           </div>
         </div>
@@ -567,130 +567,130 @@
 
         <!-- 8 Success/Partial Success/Failure Video Panes -->
         <div id="video-pane-pack-1" class="demo-pane is-active">
-          <div class="video-container">
-            <video class="video-player" controls autoplay loop muted playsinline style="display: none;">
+          <div class="video-container" data-state="loading">
+            <video class="video-player" controls preload="none" loop muted playsinline>
               <source src="./videos/packcube_success1.mp4" type="video/mp4">
               Your browser does not support the video tag.
             </video>
-            <div class="placeholder-overlay">
-              <div class="placeholder-icon">
-                <i class="fas fa-play-circle"></i>
-              </div>
-              <div class="placeholder-title">Pack Cubes &mdash; Success 1</div>
-              <div class="placeholder-text">Video placeholder. Place your video file at <code>videos/packcube_success1.mp4</code></div>
-              <span class="placeholder-tag"><i class="fas fa-video mr-1"></i> Pack Cubes &bull; Success 1 / 8</span>
+            <div class="video-loading" role="status">
+              <span class="video-spinner" aria-hidden="true"></span>
+              <span>Loading video…</span>
+            </div>
+            <div class="video-error" role="alert">
+              <p>Video could not be loaded.</p>
+              <button type="button" class="button is-small is-light video-retry">Retry</button>
             </div>
           </div>
         </div>
         <div id="video-pane-pack-2" class="demo-pane">
-          <div class="video-container">
-            <video class="video-player" controls autoplay loop muted playsinline style="display: none;">
+          <div class="video-container" data-state="loading">
+            <video class="video-player" controls preload="none" loop muted playsinline>
               <source src="./videos/packcube_success2.mp4" type="video/mp4">
               Your browser does not support the video tag.
             </video>
-            <div class="placeholder-overlay">
-              <div class="placeholder-icon">
-                <i class="fas fa-play-circle"></i>
-              </div>
-              <div class="placeholder-title">Pack Cubes &mdash; Success 2</div>
-              <div class="placeholder-text">Video placeholder. Place your video file at <code>videos/packcube_success2.mp4</code></div>
-              <span class="placeholder-tag"><i class="fas fa-video mr-1"></i> Pack Cubes &bull; Success 2 / 8</span>
+            <div class="video-loading" role="status">
+              <span class="video-spinner" aria-hidden="true"></span>
+              <span>Loading video…</span>
+            </div>
+            <div class="video-error" role="alert">
+              <p>Video could not be loaded.</p>
+              <button type="button" class="button is-small is-light video-retry">Retry</button>
             </div>
           </div>
         </div>
         <div id="video-pane-pack-3" class="demo-pane">
-          <div class="video-container">
-            <video class="video-player" controls autoplay loop muted playsinline style="display: none;">
+          <div class="video-container" data-state="loading">
+            <video class="video-player" controls preload="none" loop muted playsinline>
               <source src="./videos/packcube_success3.mp4" type="video/mp4">
               Your browser does not support the video tag.
             </video>
-            <div class="placeholder-overlay">
-              <div class="placeholder-icon">
-                <i class="fas fa-play-circle"></i>
-              </div>
-              <div class="placeholder-title">Pack Cubes &mdash; Success 3</div>
-              <div class="placeholder-text">Video placeholder. Place your video file at <code>videos/packcube_success3.mp4</code></div>
-              <span class="placeholder-tag"><i class="fas fa-video mr-1"></i> Pack Cubes &bull; Success 3 / 8</span>
+            <div class="video-loading" role="status">
+              <span class="video-spinner" aria-hidden="true"></span>
+              <span>Loading video…</span>
+            </div>
+            <div class="video-error" role="alert">
+              <p>Video could not be loaded.</p>
+              <button type="button" class="button is-small is-light video-retry">Retry</button>
             </div>
           </div>
         </div>
         <div id="video-pane-pack-4" class="demo-pane">
-          <div class="video-container">
-            <video class="video-player" controls autoplay loop muted playsinline style="display: none;">
+          <div class="video-container" data-state="loading">
+            <video class="video-player" controls preload="none" loop muted playsinline>
               <source src="./videos/packcube_partial_success1.mp4" type="video/mp4">
               Your browser does not support the video tag.
             </video>
-            <div class="placeholder-overlay">
-              <div class="placeholder-icon">
-                <i class="fas fa-play-circle"></i>
-              </div>
-              <div class="placeholder-title">Pack Cubes &mdash; Partial Success 1</div>
-              <div class="placeholder-text">Video placeholder. Place your video file at <code>videos/packcube_partial_success1.mp4</code></div>
-              <span class="placeholder-tag"><i class="fas fa-video mr-1"></i> Pack Cubes &bull; Partial Success 1 / 8</span>
+            <div class="video-loading" role="status">
+              <span class="video-spinner" aria-hidden="true"></span>
+              <span>Loading video…</span>
+            </div>
+            <div class="video-error" role="alert">
+              <p>Video could not be loaded.</p>
+              <button type="button" class="button is-small is-light video-retry">Retry</button>
             </div>
           </div>
         </div>
         <div id="video-pane-pack-5" class="demo-pane">
-          <div class="video-container">
-            <video class="video-player" controls autoplay loop muted playsinline style="display: none;">
+          <div class="video-container" data-state="loading">
+            <video class="video-player" controls preload="none" loop muted playsinline>
               <source src="./videos/packcube_partial_success2.mp4" type="video/mp4">
               Your browser does not support the video tag.
             </video>
-            <div class="placeholder-overlay">
-              <div class="placeholder-icon">
-                <i class="fas fa-play-circle"></i>
-              </div>
-              <div class="placeholder-title">Pack Cubes &mdash; Partial Success 2</div>
-              <div class="placeholder-text">Video placeholder. Place your video file at <code>videos/packcube_partial_success2.mp4</code></div>
-              <span class="placeholder-tag"><i class="fas fa-video mr-1"></i> Pack Cubes &bull; Partial Success 2 / 8</span>
+            <div class="video-loading" role="status">
+              <span class="video-spinner" aria-hidden="true"></span>
+              <span>Loading video…</span>
+            </div>
+            <div class="video-error" role="alert">
+              <p>Video could not be loaded.</p>
+              <button type="button" class="button is-small is-light video-retry">Retry</button>
             </div>
           </div>
         </div>
         <div id="video-pane-pack-6" class="demo-pane">
-          <div class="video-container">
-            <video class="video-player" controls autoplay loop muted playsinline style="display: none;">
+          <div class="video-container" data-state="loading">
+            <video class="video-player" controls preload="none" loop muted playsinline>
               <source src="./videos/packcube_partial_success3.mp4" type="video/mp4">
               Your browser does not support the video tag.
             </video>
-            <div class="placeholder-overlay">
-              <div class="placeholder-icon">
-                <i class="fas fa-play-circle"></i>
-              </div>
-              <div class="placeholder-title">Pack Cubes &mdash; Partial Success 3</div>
-              <div class="placeholder-text">Video placeholder. Place your video file at <code>videos/packcube_partial_success3.mp4</code></div>
-              <span class="placeholder-tag"><i class="fas fa-video mr-1"></i> Pack Cubes &bull; Partial Success 3 / 8</span>
+            <div class="video-loading" role="status">
+              <span class="video-spinner" aria-hidden="true"></span>
+              <span>Loading video…</span>
+            </div>
+            <div class="video-error" role="alert">
+              <p>Video could not be loaded.</p>
+              <button type="button" class="button is-small is-light video-retry">Retry</button>
             </div>
           </div>
         </div>
         <div id="video-pane-pack-7" class="demo-pane">
-          <div class="video-container">
-            <video class="video-player" controls autoplay loop muted playsinline style="display: none;">
+          <div class="video-container" data-state="loading">
+            <video class="video-player" controls preload="none" loop muted playsinline>
               <source src="./videos/packcube_failure1.mp4" type="video/mp4">
               Your browser does not support the video tag.
             </video>
-            <div class="placeholder-overlay">
-              <div class="placeholder-icon">
-                <i class="fas fa-play-circle"></i>
-              </div>
-              <div class="placeholder-title">Pack Cubes &mdash; Failure 1</div>
-              <div class="placeholder-text">Video placeholder. Place your video file at <code>videos/packcube_failure1.mp4</code></div>
-              <span class="placeholder-tag"><i class="fas fa-video mr-1"></i> Pack Cubes &bull; Failure 1 / 8</span>
+            <div class="video-loading" role="status">
+              <span class="video-spinner" aria-hidden="true"></span>
+              <span>Loading video…</span>
+            </div>
+            <div class="video-error" role="alert">
+              <p>Video could not be loaded.</p>
+              <button type="button" class="button is-small is-light video-retry">Retry</button>
             </div>
           </div>
         </div>
         <div id="video-pane-pack-8" class="demo-pane">
-          <div class="video-container">
-            <video class="video-player" controls autoplay loop muted playsinline style="display: none;">
+          <div class="video-container" data-state="loading">
+            <video class="video-player" controls preload="none" loop muted playsinline>
               <source src="./videos/packcube_failure2.mp4" type="video/mp4">
               Your browser does not support the video tag.
             </video>
-            <div class="placeholder-overlay">
-              <div class="placeholder-icon">
-                <i class="fas fa-play-circle"></i>
-              </div>
-              <div class="placeholder-title">Pack Cubes &mdash; Failure 2</div>
-              <div class="placeholder-text">Video placeholder. Place your video file at <code>videos/packcube_failure2.mp4</code></div>
-              <span class="placeholder-tag"><i class="fas fa-video mr-1"></i> Pack Cubes &bull; Failure 2 / 8</span>
+            <div class="video-loading" role="status">
+              <span class="video-spinner" aria-hidden="true"></span>
+              <span>Loading video…</span>
+            </div>
+            <div class="video-error" role="alert">
+              <p>Video could not be loaded.</p>
+              <button type="button" class="button is-small is-light video-retry">Retry</button>
             </div>
           </div>
         </div>
